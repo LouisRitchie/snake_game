@@ -1,59 +1,61 @@
 function yourScript() {
-	var escaping;
+	var decision;
 	var escIndex;
-	var escArray;
-  
-	function decider() {    
+	var escArray;	
+
+	
+	// peek() decides the future behaviour and makes sure
+	// the data in the variables is OK
+	function peek() {
+		if (self.peekForCollision(self.direction)) {
+			escaping = true;
+			escArray = self.getOpenCellDirections();
+			escIndex = 0;
+		}
+	}
+
+	peek();
+
+	// decider() function calls the others
+	function decider() {   
 		if (escaping) {
-			escapeIndex+=1;
-			if (escapeIndex == escArray.length-1) {
+			escIndex+=1;
+			if (escIndex == escArray.length-1) {
 				escaping = false;
 				return basicmotion();
 			} else {
-			return nextMoves[escapeIndex];
+			return escArray[escIndex];
 			}
 		}
-    
-		if (self.peekForCollision(self.direction)) {
-			escaping = true;
-			escArray = self.getOpenCellDirections;
-			escIndex = 0;
-			return nextMoves[escapeIndex];
+		return basicmotion();
     }
-    else {
-      nextMove = basicmotion();
+
+	// basicmotion() is the simplest behaviour
+	function basicmotion(){
+		if ( self.head_y != self.food_y){
+			if (self.isFoodAbove()){
+				return UP;
+			}
+			if (self.isFoodBelow()){
+				return DOWN;
+			}
+
+		}
+		if (self.isFoodLeft()){
+			return LEFT;
+		}
+		if (self.isFoodRight()){
+			return RIGHT;
+		}
+      
+      
+		if ( self.head_x == self.head_x){
+			return UP;
+		}
     }
-  }
-  
-  function basicmotion(){
-      if ( self.head_y != self.food_y){
-          
-          if (self.isFoodAbove()){
-            return UP;
-          }
-           if (self.isFoodBelow()){
-            return DOWN;
-          }
-      
-      }
-      
-  
-      
-       if (self.isFoodLeft()){
-        return LEFT;
-      }
-       if (self.isFoodRight()){
-        return RIGHT;
-      }
-      
-      
-      if ( self.head_x == self.head_x){
-        return UP;
-      }
-    
-    
-  
-  }
-  return decider();
-  
+	
+
+	// decider is called to make the decision.
+	return decider();
 }
+
